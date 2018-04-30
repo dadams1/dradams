@@ -1,0 +1,33 @@
+#!/usr/local/bin/perl
+
+#
+# removes extraneous files. D. Adams.
+#
+
+# modify the following line to point to the 'ls'
+# executable (to bypass aliases). To find, type
+# 'unalias ls' then type 'which ls'
+$ls = "/bin/ls";
+
+open(FILES,"$ls -1 -a |");
+$any = 0;
+$n = "\050\110\151\040\123\167\145";
+printf("Weeding...\n");
+while(<FILES>) {
+    chop;
+    if($_ =~ /^\.#/ || 
+       $_ =~ /~$/   ||
+       $_ =~ /^#/   ||
+       $_ =~ /^metafile/   ||
+       $_ =~ /core/    ||
+       $_ =~ /dead.letter/) {
+       printf("\tpulling \"%s\"\n",$_);
+       $system_string = "rm -f "."$_";
+       system($system_string);
+       $any = 1;
+   }
+} 
+close(FILES);
+$n .= "\145\164\151\145\041\041\051\n";
+if(! $any){printf("No weeds found.\n");}
+printf("done.\n$n");
